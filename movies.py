@@ -1,5 +1,12 @@
 import sys
 from rockset import Client, ParamDict
+from tabulate import tabulate
+
+def query(q):
+    print('\n' + q['message'] + year + ' are...')
+    qlambda = rs.QueryLambda.retrieve(q['query'],version=q['version'], workspace='commons')
+    results = qlambda.execute(parameters=params)
+    print(tabulate(results['results'], headers='keys'))
 
 ROCKSET_API_KEY = 'mJr4cmYxvcS7VjF0EnP2h6RtUi8bVppzGWS7v85KF1cug6lqoinAU585aomkuoc6'
 
@@ -12,25 +19,31 @@ else:
 
 params = ParamDict()
 params['year'] = year
-
-print('\nLet\'s get the top rated movies...')
 rs = Client(api_key=ROCKSET_API_KEY, api_server='https://api.rs2.usw2.rockset.com')
-qlambda = rs.QueryLambda.retrieve('mostpopular',version='744188d437a6ac0d',workspace='commons')
-results = qlambda.execute(parameters=params)
+
+queries=[{'message':'The top 10 most popular movies for ', 'query':'mostpopular', 'version':'4a9eeaec908830b0'}]
+
+for q in queries:
+    query(q)
+
+'''
 print('\nThe top 10 most popular movies for ' + year + ' are...')
-for i in range(0,10):
-    print(str(i) + ' ' + results['results'][i]['title'] + ' ' + str(results['results'][i]['popularity']))
-
-print('\nLet\'s get the top grossing movies...')
-qlambda = rs.QueryLambda.retrieve('highestgrossing', version='b1c9036b3a6ae864', workspace='commons')
+qlambda = rs.QueryLambda.retrieve('mostpopular',version='4a9eeaec908830b0', workspace='commons')
 results = qlambda.execute(parameters=params)
+print(tabulate(results['results'], headers='keys'))
+
 print('\nThe top 10 highest grossing movies for ' + year + ' are...')
-for i in range(0,10):
-    print(str(i) + ' ' + results['results'][i]['title'] + ' ' + str(results['results'][i]['revenue']) + ' ' + str(results['results'][i]['r']))
-
-print('\nLet\'s get the top genres...')
-qlambda = rs.QueryLambda.retrieve('topgenres', version='fc8349e40153ebf1', workspace='commons')
+qlambda = rs.QueryLambda.retrieve('highestgrossing', version='9ed282f82b8d18c3', workspace='commons')
 results = qlambda.execute(parameters=params)
+print(tabulate(results['results'], headers='keys'))
+
 print('\nThe top 10 genres for ' + year + ' are...')
-for i in range(0,10):
-    print(str(i) + ' ' + results['results'][i]['name'] + ' ' + str(results['results'][i]['?count']))
+qlambda = rs.QueryLambda.retrieve('topgenres', version='ff13cce933698574', workspace='commons')
+results = qlambda.execute(parameters=params)
+print(tabulate(results['results'], headers='keys'))
+
+print('\nThe top production companies for the most popular genre of ' + year + ' are...')
+qlambda = rs.QueryLambda.retrieve('topproductioncompanies', version='67a8f1531a780120', workspace='commons')
+results = qlambda.execute(parameters=params)
+print(tabulate(results['results'], headers='keys'))
+'''
