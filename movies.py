@@ -4,7 +4,7 @@ from tabulate import tabulate
 
 if len(sys.argv) == 2:
     year = sys.argv[1]
-    print('Querying Rockset for year ' + year + '...')
+    print('Querying Rockset for year ' + year + '...\n')
 else:
     print('usage: python3 movies.py [year]')
     exit(1)
@@ -21,10 +21,10 @@ queries = [
 
 
 def query(q):
-    print('\n' + q['message'] + year + ' are...')
+    print(q['message'] + year + ' are...')
     qlambda = rs.QueryLambda.retrieve(q['query'], version=q['version'], workspace='commons')
     results = qlambda.execute(parameters=params)
-    print(tabulate(results['results'], headers='keys'))
+    print(tabulate(results['results'], headers='keys') + '\n')
 
 
 for q in queries:
