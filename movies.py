@@ -22,8 +22,7 @@ queries = [
 
 def query(q):
     print('\n' + q['message'] + year + ' are...')
-    qlambda = rs.QueryLambda.retrieve(
-        q['query'], version=q['version'], workspace='commons')
+    qlambda = rs.QueryLambda.retrieve(q['query'], version=q['version'], workspace='commons')
     results = qlambda.execute(parameters=params)
     print(tabulate(results['results'], headers='keys'))
 
